@@ -1,0 +1,10 @@
+.idea/
+erodrive/backend/__pycache__/
+erodrive/backend/migrations/__init__.py
+erodrive/backend/migrations/__pycache__/
+erodrive/erodrive/__init__.py
+erodrive/erodrive/__pycache__/
+erodrive/web/__pycache__/
+erodrive/web/migrations/__pycache__/
+erodrive/erodrive/middlewares/__pycache__/
+erodrive/repositories/__pycache__/

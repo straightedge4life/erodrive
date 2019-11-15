@@ -1,0 +1,55 @@
+{% extends 'layout/default.html' %}
+
+{% block title %}INSTALL{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <!-- Static navbar -->
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="javascript:void(0);">INSTALLATION : STEP 0</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Please copy client id and client secret into text box from <b>One Drive</b>
+                application page.
+            </div>
+            <div class="panel-body">
+                <form method="post" action="/admin/install?step=1" id="step_one_form">
+                    {% csrf_token %}
+                    <div class="form-group col-lg-5">
+                        <input type="text" class="form-control" name="client_id" id="client_id" placeholder="client id" required>
+                        <div class="h4"></div>
+
+                        <input type="text" class="form-control" name="client_secret" id="client_secret"
+                               placeholder="client secret" required>
+                        <div class="h4"></div>
+
+                        <input type="text" class="form-control "  value="{{  redirect_url }}" disabled="disabled">
+                        <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url }}">
+                        <a class="btn btn-default navbar-btn" href="{{  url }}" target="_blank">App Page</a>
+                        <button class="btn btn-default navbar-btn">Next</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('#step_one_form').on('submit', function (e) {
+            if(!$('#client_id').val().trim() || !$('#client_secret').val().trim()) {
+                return false;
+            }
+            $(e).submit()
+        })
+    </script>
+{% endblock %}

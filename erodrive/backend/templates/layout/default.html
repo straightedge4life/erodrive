@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <header>
+        {% include 'layout/header.html' %}
+        <title>{% block title %}{% endblock %} - ERO DRIVE</title>
+    </header>
+    <body>
+     {% block content %}{% endblock %}
+     {% include 'layout/footer.html' %}
+    </body>
+    {% block script %}{% endblock %}
+</html>
