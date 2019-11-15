@@ -15,7 +15,7 @@ def install(request):
     code = request.GET.get('code', None)
 
     if code:
-        return install_2(request)
+        return install_2(request, code)
 
     func_name = 'install_'+step
     return globals()[func_name](request)
@@ -55,7 +55,7 @@ def install_1(request):
     params = request.POST
     if not params:
         return HttpResponseRedirect('/admin/install')
-    # write configure file
+    # write into configure file
 
     data = {
         'client_id': params.get('client_id', ''),
@@ -74,6 +74,7 @@ def install_1(request):
     return render(request, 'install/2.html', {'oauth_url': oauth_url})
 
 
-def install_2(request):
-
-    return HttpResponse('')
+def install_2(request, code):
+    one = OneDrive()
+    one.get_token(code)
+    return JsonResponse({'status': 'SUCCESS'})

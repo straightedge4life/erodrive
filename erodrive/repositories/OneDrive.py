@@ -1,6 +1,7 @@
 from erodrive import helpers
 import urllib
 import requests
+import json
 
 
 class OneDrive:
@@ -74,6 +75,8 @@ class OneDrive:
             'code': code,
             'grant_type': 'authorization_code'
         }
-        # Pre-solve response result,raw response return is not suggest.
-        return requests.post(url, payload, headers=headers)
-
+        resp = json.loads(requests.post(url, payload, headers=headers).text)
+        if resp.get('error'):
+            raise Exception(resp.get('error_description'))
+        helpers.batch_store_config(resp)
+        return resp
