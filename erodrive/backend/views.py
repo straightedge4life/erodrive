@@ -76,5 +76,5 @@ def install_1(request):
 
 def install_2(request, code):
     one = OneDrive()
-    one.get_token(code)
+    one.authorize(code)
     return JsonResponse({'status': 'SUCCESS'})

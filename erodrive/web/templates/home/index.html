@@ -37,10 +37,9 @@
         </div>
 
           <ul class="list-group">
-          <li class="list-group-item">201906/</li>
-          <li class="list-group-item">201907/</li>
-          <li class="list-group-item">201908/</li>
-          <li class="list-group-item">201909/</li>
+          {% for item in item_list %}
+              <li class="list-group-item">{{ item.name }}/</li>
+          {% endfor %}
         </ul>
       </div>
 

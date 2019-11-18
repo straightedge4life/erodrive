@@ -18,7 +18,9 @@ class OneDrive:
 
     app_url = "https://apps.dev.microsoft.com/?deepLink="
 
-    api_url = "https://login.microsoftonline.com/common/oauth2/v2.0"
+    oauth_url = "https://login.microsoftonline.com/common/oauth2/v2.0"
+
+    api_url = 'https://graph.microsoft.com/v1.0'
 
     scope = urllib.parse.quote('offline_access files.readwrite.all')
 
@@ -54,15 +56,15 @@ class OneDrive:
         client_id = helpers.config('client_id')
         redirect_url = helpers.config('redirect_url')
         path = "/authorize?client_id=%s&scope=%s&response_type=code&redirect_uri=%s"
-        return self.api_url + path % (client_id, self.scope, redirect_url)
+        return self.oauth_url + path % (client_id, self.scope, redirect_url)
 
-    def get_token(self, code):
+    def authorize(self, code):
         """
         require token from Microsoft api by code
         :param code:
         :return:
         """
-        url = self.api_url + "/token"
+        url = self.oauth_url + "/token"
         headers = {
             'user-agent': 'User-Agent:Mozilla/5.0 (Windows NT 6.1) \
                 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
@@ -78,5 +80,60 @@ class OneDrive:
         resp = json.loads(requests.post(url, payload, headers=headers).text)
         if resp.get('error'):
             raise Exception(resp.get('error_description'))
+
+        resp['is_install'] = True
         helpers.batch_store_config(resp)
         return resp
+
+    def get_list(self, path: str = '/'):
+        """
+        获取文件列表
+        :param path:
+        :return:
+        """
+        query = 'children?select=name,size,folder,@microsoft.graph.downloadUrl,lastModifiedDateTime'
+        url = self.api_url + '/me/drive/root' + path + query
+        access_token = helpers.config('access_token')
+        if not access_token:
+            raise Exception('Access token does not exists.Please refresh token.')
+        headers = {
+            'Authorization': 'bearer ' + access_token,
+            'Content-Type': 'application/json'
+        }
+        resp = requests.get(url, headers=headers).text
+
+        resp = json.loads(resp)
+
+        if resp.get('error'):
+            raise Exception(resp.get('error_description'))
+
+        return resp
+
+    def get_token(self):
+        """
+        Get access_token by refresh_token
+        :return:
+        """
+
+        params = {
+            'client_id': helpers.config('client_id'),
+            'redirect_uri': helpers.config('redirect_url'),
+            'client_secret': helpers.config('client_secret'),
+            'refresh_token': helpers.config('refresh_token'),
+            'grant_type': 'refresh_token'
+        }
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        url = self.oauth_url + '/token'
+
+        resp = requests.post(url, data=params, headers=headers).text
+        resp = json.loads(resp)
+
+        if resp.get('error'):
+            raise Exception(resp.get('error_description'))
+        helpers.batch_store_config(resp)
+
+        return None
