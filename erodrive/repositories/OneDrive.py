@@ -91,6 +91,12 @@ class OneDrive:
         :param path:
         :return:
         """
+
+        if not path:
+            path = '/'
+        elif path != '/':
+            path = urllib.parse.quote(':/' + path + ':/')
+
         query = 'children?select=name,size,folder,@microsoft.graph.downloadUrl,lastModifiedDateTime'
         url = self.api_url + '/me/drive/root' + path + query
         access_token = helpers.config('access_token')
@@ -105,7 +111,7 @@ class OneDrive:
         resp = json.loads(resp)
 
         if resp.get('error'):
-            raise Exception(resp.get('error_description'))
+            raise Exception(resp.get('error'))
 
         return resp
 

@@ -33,12 +33,31 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="page-header">
-            <h3><small> <a href="">201910</a> > <a href="">10月合集</a></small></h3>
+            <h3>
+                <small>
+                    {% for p in path_list %}
+                        {% if p %}
+                           <a href="/?path={{ p.path }}">{{ p.name }}</a>  >
+                        {% endif %}
+                    {% endfor %}
+                    </a>
+                </small>
+            </h3>
         </div>
 
           <ul class="list-group">
           {% for item in item_list %}
-              <li class="list-group-item">{{ item.name }}/</li>
+              <li class="list-group-item">
+              {% if item.type == 'file' %}
+                  <a href="{{ item.downloadUrl }}" target="_blank">
+                      {{ item.name }}
+                  </a>
+              {% else %}
+                  <a href="?path={{ curr_path }}/{{ item.name }}">
+                      {{ item.name }}
+                  </a>
+              {% endif %}
+              </li>
           {% endfor %}
         </ul>
       </div>

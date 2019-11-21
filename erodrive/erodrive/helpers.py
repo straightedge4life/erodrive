@@ -1,6 +1,7 @@
 import configparser
 from configparser import NoOptionError, NoSectionError
 from django.conf import settings
+import json
 
 
 def config(key: str, value: str = None, section: str = 'APP', file_name: str = 'base'):
@@ -59,3 +60,22 @@ def batch_store_config(data: dict = {}):
     for c in data:
         config(key=c, value=data[c])
     return None
+
+
+def list_format(data: list):
+    """
+    文件列表格式化
+    :param data:
+    :return:
+    """
+    if not data:
+        return []
+
+    for val in data:
+        if val.get('@microsoft.graph.downloadUrl'):
+            val.update({'downloadUrl': val.get('@microsoft.graph.downloadUrl')})
+        if val.get('folder'):
+            val.update({'type': 'folder'})
+        else:
+            val.update({'type': 'file'})
+    return data
