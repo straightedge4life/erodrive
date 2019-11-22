@@ -32,42 +32,9 @@
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <div class="page-header">
-            <h3>
-                <small>
-                    {% for p in path_list %}
-                        {% if p %}
-                           <a href="/?path={{ p.path }}">{{ p.name }}</a>  >
-                        {% endif %}
-                    {% endfor %}
-                    </a>
-                </small>
-            </h3>
-        </div>
-
-          <ul class="list-group">
-          {% for item in item_list %}
-              <li class="list-group-item">
-              {% if item.type == 'file' %}
-                  {% if item.show %}
-                      <a href="/detail?file_path={{ curr_path }}&file_name={{ item.name }}" target="_blank">{{ item.name }}</a>
-                  {% else %}
-                      <a href="{{ item.downloadUrl }}" target="_blank">{{ item.name }}</a>
-                  {% endif %}
-              {% else %}
-                  <a href="?path={{ curr_path }}/{{ item.name }}">
-                      {{ item.name }}
-                  </a>
-              {% endif %}
-              </li>
-          {% endfor %}
-        </ul>
+          <video src="{{ file.downloadUrl }}" controls="controls" style="max-width:90%;margin: 0 auto;display: block"></video>
       </div>
-
-
-
     </div> <!-- /container -->
-
 
   </body>
 </html>

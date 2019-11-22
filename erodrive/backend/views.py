@@ -61,12 +61,12 @@ def install_1(request):
         'client_id': params.get('client_id', ''),
         'client_secret': params.get('client_secret', ''),
         'redirect_url': params.get('redirect_url', ''),
-        'show': {
-            'stream': ['txt'],
-            'image': ['jpeg', 'jpg', 'png', 'gif'],
-            'video': ['mp4', 'mkv', 'avi'],
-            'audio': ['mp3', 'wav', 'ogg'],
-        }
+        'show': [
+            {'category': 'stream', 'suffix': ['txt']},
+            {'category': 'image', 'suffix': ['jpeg', 'jpg', 'png', 'gif']},
+            {'category': 'video', 'suffix': ['mp4', 'mkv', 'avi']},
+            {'category': 'audio', 'suffix': ['mp3', 'wav', 'ogg']}
+        ]
     }
     helpers.batch_store_config(data)
     one = OneDrive()

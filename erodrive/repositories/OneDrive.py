@@ -143,3 +143,18 @@ class OneDrive:
         helpers.batch_store_config(resp)
 
         return None
+
+    def get_file(self, path: str, name: str):
+        """
+        Find file in list
+        :param path:
+        :param name:
+        :return:
+        """
+        file_list = self.get_list(path)['value']
+        for f in file_list:
+            if f['name'] == name:
+                f.update({'downloadUrl': f.get('@microsoft.graph.downloadUrl')})
+                del f['@microsoft.graph.downloadUrl']
+                return f
+        return []

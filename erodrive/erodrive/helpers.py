@@ -64,18 +64,53 @@ def batch_store_config(data: dict = {}):
 
 def list_format(data: list):
     """
-    文件列表格式化
+    format the file list
     :param data:
     :return:
     """
     if not data:
         return []
 
+    show_suffix_configure = eval(config('show'))
+    show_suffix_list = []
+    for val in show_suffix_configure:
+        for t in val['suffix']:
+            show_suffix_list.append(t)
+
     for val in data:
         if val.get('@microsoft.graph.downloadUrl'):
             val.update({'downloadUrl': val.get('@microsoft.graph.downloadUrl')})
+
         if val.get('folder'):
             val.update({'type': 'folder'})
+            val.update({'show': False})
         else:
             val.update({'type': 'file'})
+            suffix = val.get('name').split('.').pop()
+            val.update({'show': True if suffix in show_suffix_list else False})
+
     return data
+
+
+def path_format(path):
+    """
+    path format use by breadcrumbs
+    :param path:
+    :return:
+    """
+    if not path or path == '/':
+        return [{'name': '/', 'path': '/'}]
+    path_chain = ''
+    path_list = []
+    for p in path.split('/'):
+        name = p if p else '/'
+        if path_chain == '/':
+            path_chain = path_chain + p
+        else:
+            path_chain = path_chain + '/' + p
+
+        path_list.append({
+            'name': name,
+            'path': path_chain
+        })
+    return path_list
