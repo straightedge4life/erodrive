@@ -26,7 +26,7 @@ SECRET_KEY = '2vg&wox7lt%u2-0-scq-)+ho@2l^_xtf9y=uvxn4@*l38o_+e*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', ]
 
 
 # Application definition
@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'erodrive.middlewares.checklogin.CheckLogin',
+    'erodrive.middlewares.checkadminlogin.CheckAdminLogin',
     'erodrive.middlewares.install.InstallMiddleware',
 ]
 
@@ -127,3 +129,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'backend/static/'),
     os.path.join(BASE_DIR, 'web/static/'),
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_COOKIE_AGE = 60*5
+# 3600*48

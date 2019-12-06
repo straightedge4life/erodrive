@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
@@ -8,10 +9,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ERO DRIVE HOME PAGE</title>
+    <title>{{ file_name }} - {{ site_name }}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'styles/bootstrap.css' %}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 
@@ -25,7 +26,7 @@
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">ERO DRIVE</a>
+            <a class="navbar-brand" href="#">{{ site_name }}</a>
           </div>
         </div>
       </nav>

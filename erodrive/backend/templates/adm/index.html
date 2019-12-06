@@ -1,0 +1,44 @@
+{% extends 'layout/default.html' %}
+
+{% block title %}ADMIN{% endblock %}
+{% block site_name %}{{ site_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">{{ site_name }}</a>
+                </div>
+            </div>
+        </nav>
+        <div class="jumbotron">
+            <form role="form" action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Site name</label>
+                    <input type="text" class="form-control" id="site_name" value="{{ site_name }}" name="site_name">
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Home Page access code</label>
+                    <input type="text" class="form-control" id="access_code" placeholder="access code" value="{{  access_code }}" name="access_code">
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Admin Page password</label>
+                    <input type="text" class="form-control" id="password" placeholder="admin password" value="{{  password }}" name="password">
+                </div>
+
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

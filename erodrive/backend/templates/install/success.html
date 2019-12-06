@@ -1,0 +1,42 @@
+{% extends 'layout/default.html' %}
+
+{% block title %}INSTALL SUCCESSFUL{% endblock %}
+{% block site_name %}{{ site_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <!-- Static navbar -->
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="javascript:void(0);">INSTALLATION</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Application already <b>installed</b>. <br><br>
+                Home Page: <a href="{{ host }}" >{{ host }}</a> <br>
+                Admin Page: <a href="{{ host }}/admin">{{ host }}/admin</a> <br>
+                Admin Password: <b>{{ password }}</b> <br>
+            </div>
+
+
+        </div>
+
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('#step_one_form').on('submit', function (e) {
+            if(!$('#client_id').val().trim() || !$('#client_secret').val().trim()) {
+                return false;
+            }
+            $(e).submit()
+        })
+    </script>
+{% endblock %}

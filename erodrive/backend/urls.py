@@ -3,4 +3,6 @@ from backend import views
 
 urlpatterns = [
     path('install', views.install, name='install'),
+    path('', views.index, name='index'),
+    path('login', views.login, name='login'),
 ]

@@ -1,0 +1,36 @@
+{% extends 'layout/default.html' %}
+
+{% block title %}LOGIN{% endblock %}
+{% block site_name %}{{ site_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="modal-dialog" style="margin-top: 10%;">
+            <form action="/admin/login" method="POST">
+                {% csrf_token %}
+                 <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" id="myModalLabel">CONTROL BACKEND</h4>
+                </div>
+                <div class="modal-body" id="model-body">
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="PASSWORD" autocomplete="off">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary form-control">LOGIN</button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+            </form>
+        </div><!-- /.modal -->
+
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

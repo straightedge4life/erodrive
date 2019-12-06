@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>HOME PAGE - {{ site_name }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'styles/bootstrap.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Static navbar -->
+
+
+    <div class="container">
+        <div class="modal-dialog" style="margin-top: 10%;">
+            <form action="/login" method="POST">
+                {% csrf_token %}
+                 <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" id="myModalLabel">{{ site_name }}</h4>
+                </div>
+                <div class="modal-body" id="model-body">
+                    <div class="form-group">
+                        <input type="password" name="access_code" class="form-control" placeholder="ACCESS CODE" autocomplete="off">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary form-control">GO!</button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+            </form>
+        </div><!-- /.modal -->
+
+
+
+
+</body>
+</html>

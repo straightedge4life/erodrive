@@ -66,7 +66,11 @@ def install_1(request):
             {'category': 'image', 'suffix': ['jpeg', 'jpg', 'png', 'gif']},
             {'category': 'video', 'suffix': ['mp4', 'mkv', 'avi']},
             {'category': 'audio', 'suffix': ['mp3', 'wav', 'ogg']}
-        ]
+        ],
+        'site_name': 'ERO DRIVE',
+        'password': 'shikoeveryday',
+        'access_code': '',
+        'salt': helpers.rand_str(32)
     }
     helpers.batch_store_config(data)
     one = OneDrive()
@@ -75,6 +79,57 @@ def install_1(request):
 
 
 def install_2(request, code):
+    """
+    Go authorize then writen in configure file
+    :param request:
+    :param code:
+    :return:
+    """
     one = OneDrive()
     one.authorize(code)
-    return JsonResponse({'status': 'SUCCESS'})
+    data = {
+        'host': request.get_host(),
+        'password': helpers.config('password'),
+        'site_name': helpers.config('site_name'),
+    }
+    return render(request, 'install/success.html', data)
+
+
+def index(request):
+    if request.POST:
+        helpers.batch_store_config({
+            'site_name': request.POST.get('site_name', 'ERO DRIVE'),
+            'password': request.POST.get('password'),
+            'access_code': request.POST.get('access_code'),
+        })
+
+    configure = {
+        'site_name': helpers.config('site_name'),
+        'password': helpers.config('password'),
+        'access_code': helpers.config('access_code'),
+    }
+    return render(request, 'adm/index.html', configure)
+
+
+def login(request):
+    """
+    Login page & method
+    :param request:
+    :return:
+    """
+    if request.POST:
+        c_password = str(request.POST.get('password'))
+        if c_password != str(helpers.config('password')):
+            return HttpResponseRedirect('/admin/login')
+
+        token, timestamp = helpers.generate_token(val=c_password)
+        request.session['admin_auth_info'] = {
+            'token': token,
+            'time': timestamp
+        }
+        return HttpResponseRedirect('/admin')
+
+    data = {
+        'site_name': helpers.config('site_name')
+    }
+    return render(request, 'adm/login.html', data)

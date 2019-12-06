@@ -158,3 +158,31 @@ class OneDrive:
                 del f['@microsoft.graph.downloadUrl']
                 return f
         return []
+
+    def upload(self, local_path: str, remote_path: str):
+
+        if not remote_path:
+            remote_path = '/'
+        elif remote_path != '/':
+            remote_path = urllib.parse.quote(':/' + remote_path + ':/')
+
+        access_token = helpers.config('access_token')
+        if not access_token:
+            raise Exception('Access token does not exists.Please refresh token.')
+
+        headers = {
+            'Authorization': 'bearer ' + access_token,
+            'Content-Type': 'application/json'
+        }
+
+        with open(local_path, 'rb') as f:
+            file_name = local_path.split('/').pop()
+            query = '/content'
+            files = {'file': (file_name, f)}
+            url = self.api_url + '/me/drive/root' + remote_path + file_name + query
+            resp = requests.put(url, headers=headers, files=files).text
+            resp = json.loads(resp)
+            if resp.get('error'):
+                raise Exception(resp.get('error'))
+
+        return resp

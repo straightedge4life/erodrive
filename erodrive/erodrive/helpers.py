@@ -2,6 +2,9 @@ import configparser
 from configparser import NoOptionError, NoSectionError
 from django.conf import settings
 import json
+import hashlib
+import time
+import random
 
 
 def config(key: str, value: str = None, section: str = 'APP', file_name: str = 'base'):
@@ -114,3 +117,39 @@ def path_format(path):
             'path': path_chain
         })
     return path_list
+
+
+def md5(encrypt_string: str):
+    return hashlib.md5(encrypt_string.encode('utf8')).hexdigest()
+
+
+def generate_token(val: str, timestamp=None):
+    salt = config('salt')
+    if not timestamp:
+        timestamp = str(int(time.time()))
+
+    token = md5(md5(md5(val) + salt) + timestamp)
+    return token, timestamp
+
+
+def compare_web_token(auth_info: dict):
+    access_code = str(config('access_code'))
+    token, timestamp = generate_token(val=access_code, timestamp=auth_info.get('time'))
+    return token == auth_info.get('token')
+
+
+def compare_admin_token(auth_info: dict):
+    password = str(config('password'))
+    token, timestamp = generate_token(val=password, timestamp=auth_info.get('time'))
+    return token == auth_info.get('token')
+
+
+def rand_str(num: int = 1):
+    timestamp = str(int(time.time()))
+    string = 'zxcvbnmasdfghjklqwertyuiop?&^%$#@!_.' + timestamp
+    random_string = ''
+    if num <= 0:
+        return random.choice(string)
+    for i in range(0, num):
+        random_string += random.choice(string)
+    return random_string
