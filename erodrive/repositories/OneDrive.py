@@ -2,6 +2,7 @@ from erodrive import helpers
 import urllib
 import requests
 import json
+import os
 
 
 class OneDrive:
@@ -23,6 +24,9 @@ class OneDrive:
     api_url = 'https://graph.microsoft.com/v1.0'
 
     scope = urllib.parse.quote('offline_access files.readwrite.all')
+
+    # 4*1024*1024 = 4194304
+    large_file_size = 4190000
 
     def __new__(cls, *args, **kwargs):
         """
@@ -160,13 +164,17 @@ class OneDrive:
         return []
 
     def upload(self, local_path: str, remote_path: str):
+        # return bytes
+        file_size = os.path.getsize(local_path)
+        if file_size > self.large_file_size:
+            return self.upload_large_file(local_path, remote_path, file_size)
+        return self.upload_small_file(local_path, remote_path)
 
-        if not remote_path:
-            remote_path = '/'
-        elif remote_path != '/':
-            remote_path = urllib.parse.quote(':/' + remote_path + ':/')
-
+    def upload_small_file(self, local_path: str, remote_path: str):
+        file_name = helpers.get_file_name(local_path)
+        remote_path = self.prepare_remote_path(remote_path, file_name)
         access_token = helpers.config('access_token')
+
         if not access_token:
             raise Exception('Access token does not exists.Please refresh token.')
 
@@ -176,13 +184,45 @@ class OneDrive:
         }
 
         with open(local_path, 'rb') as f:
-            file_name = local_path.split('/').pop()
-            query = '/content'
-            files = {'file': (file_name, f)}
-            url = self.api_url + '/me/drive/root' + remote_path + file_name + query
-            resp = requests.put(url, headers=headers, files=files).text
-            resp = json.loads(resp)
-            if resp.get('error'):
-                raise Exception(resp.get('error'))
+            query = 'content'
+            url = self.api_url + '/me/drive/root' + remote_path + query
+            resp = requests.put(
+                url,
+                headers=headers,
+                data=f
+            ).text
+
+        resp = json.loads(resp)
+        if resp.get('error'):
+            raise Exception(resp.get('error'))
 
         return resp
+
+    def upload_large_file(self, local_path: str, remote_path: str, file_size: int):
+
+        file_name = helpers.get_file_name(local_path)
+        remote_path = self.prepare_remote_path(remote_path, file_name)
+        access_token = helpers.config('access_token')
+
+        if not access_token:
+            raise Exception('Access token does not exists.Please refresh token.')
+
+        headers = {
+            'Authorization': 'bearer ' + access_token,
+            'Content-Type': 'application/json'
+        }
+        query = 'createUploadSession'
+        url = self.api_url + '/me/drive/items' + remote_path + query
+        # requests.post(
+        #     url=url,
+        #     headers=headers
+        # )
+
+        return None
+
+    @staticmethod
+    def prepare_remote_path(remote_path: str, file_name: str):
+        if remote_path == '/' or not remote_path:
+            remote_path = ''
+        remote_path = urllib.parse.quote(':' + remote_path + '/' + file_name + ':/')
+        return remote_path

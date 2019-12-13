@@ -153,3 +153,8 @@ def rand_str(num: int = 1):
     for i in range(0, num):
         random_string += random.choice(string)
     return random_string
+
+
+def get_file_name(path: str):
+    file_name = path.split('/').pop()
+    return file_name
