@@ -199,7 +199,21 @@ class OneDrive:
         return resp
 
     def upload_large_file(self, local_path: str, remote_path: str, file_size: int):
+        # Request upload session
+        # Here is response data format:
+        # session = {
+        #     "@odata.context": "123",
+        #     "expirationDateTime": "2019-12-24T08:19:21.352Z",
+        #     "nextExpectedRanges": ["0-"],
+        #     "uploadUrl": "https://xxxxx"
+        # }
+        upload_session = self.create_upload_session(local_path, remote_path)
 
+        print(upload_session)
+        exit()
+        return None
+
+    def create_upload_session(self, local_path: str, remote_path: str):
         file_name = helpers.get_file_name(local_path)
         remote_path = self.prepare_remote_path(remote_path, file_name)
         access_token = helpers.config('access_token')
@@ -211,14 +225,13 @@ class OneDrive:
             'Authorization': 'bearer ' + access_token,
             'Content-Type': 'application/json'
         }
-        query = 'createUploadSession'
-        url = self.api_url + '/me/drive/items' + remote_path + query
-        # requests.post(
-        #     url=url,
-        #     headers=headers
-        # )
 
-        return None
+        query = 'createUploadSession'
+        url = self.api_url + '/drive/root' + remote_path + query
+        # No param required in this api.
+        upload_session = requests.post(url=url, headers=headers).text
+
+        return json.loads(upload_session)
 
     @staticmethod
     def prepare_remote_path(remote_path: str, file_name: str):
@@ -226,3 +239,5 @@ class OneDrive:
             remote_path = ''
         remote_path = urllib.parse.quote(':' + remote_path + '/' + file_name + ':/')
         return remote_path
+
+
