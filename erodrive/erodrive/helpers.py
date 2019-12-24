@@ -7,7 +7,7 @@ import time
 import random
 
 
-def config(key: str, value: str = None, section: str = 'APP', file_name: str = 'base'):
+def config(key: str, value: str = None, section: str = 'APP', file_name: str = 'base', default = None):
     """
     get/write configure file
     GET MODE: only passing key
@@ -17,7 +17,8 @@ def config(key: str, value: str = None, section: str = 'APP', file_name: str = '
     :param value:
     :param section:
     :param file_name:
-    :return: string
+    :param default:
+    :return:
     """
     if key is '':
         return None
@@ -42,7 +43,7 @@ def config(key: str, value: str = None, section: str = 'APP', file_name: str = '
         try:
             return parser.get(section, key)
         except NoOptionError:
-            return None
+            return default
 
     # 写入
     parser.set(section, key, value)
