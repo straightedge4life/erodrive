@@ -28,6 +28,10 @@ class OneDrive:
     # 4*1024*1024 = 4194304
     large_file_size = 4190000
 
+    chunk_piece_size = 327680 * 32
+
+    upload_url = ''
+
     def __new__(cls, *args, **kwargs):
         """
         Singleton mode
@@ -171,6 +175,7 @@ class OneDrive:
         return self.upload_small_file(local_path, remote_path)
 
     def upload_small_file(self, local_path: str, remote_path: str):
+        print('----------------START TO UPLOAD-------------------------')
         file_name = helpers.get_file_name(local_path)
         remote_path = self.prepare_remote_path(remote_path, file_name)
         access_token = helpers.config('access_token')
@@ -196,22 +201,84 @@ class OneDrive:
         if resp.get('error'):
             raise Exception(resp.get('error'))
 
-        return resp
+        # return resp
+        return 'FILE UPLOAD SUCCESS'
 
     def upload_large_file(self, local_path: str, remote_path: str, file_size: int):
-        # Request upload session
-        # Here is response data format:
-        # session = {
-        #     "@odata.context": "123",
-        #     "expirationDateTime": "2019-12-24T08:19:21.352Z",
-        #     "nextExpectedRanges": ["0-"],
-        #     "uploadUrl": "https://xxxxx"
-        # }
-        upload_session = self.create_upload_session(local_path, remote_path)
+        try:
+            upload_session = self.create_upload_session(local_path, remote_path)
+            self.upload_url = upload_session.get('uploadUrl')
+            # upload_expire = upload_session.get('expirationDateTime')
+            pointer = 0
+            if not self.upload_url:
+                raise Exception('Failed to create upload session.')
+            remainder = file_size % self.chunk_piece_size
+            composite_num = file_size - remainder
+            times = int(composite_num / self.chunk_piece_size)
 
-        print(upload_session)
-        exit()
-        return None
+            print('File size:%s,file size more than %s kb,ready to multiple upload.' % (
+                str(file_size),
+                str(self.chunk_piece_size))
+            )
+
+            print('It will divided to %s time to upload.' % str(times + 1))
+            print('----------------START TO UPLOAD-------------------------')
+            with open(local_path, 'rb') as f:
+                for t in range(0, times):
+                    print('%s kb - %s of %s' % (
+                        str(int(self.chunk_piece_size / 1024)),
+                        str(t + 1),
+                        str(times + 1))
+                    )
+
+                    byte_start = pointer
+                    f.seek(pointer)
+                    pointer += self.chunk_piece_size
+                    byte_end = pointer
+                    self.upload_piece(
+                        f.read(self.chunk_piece_size),
+                        byte_start,
+                        byte_end,
+                        file_size
+                    )
+                    print('complete.')
+                    print('-------------------------------------------------')
+
+                print('%s kb - %s of %s' % (
+                    str(int(remainder / 1024)),
+                    str(t + 1),
+                    str(times + 1))
+                )
+                # last pieces
+                byte_start = pointer
+                f.seek(pointer)
+                pointer += remainder
+                byte_end = pointer
+                self.upload_piece(
+                    f.read(remainder),
+                    byte_start,
+                    byte_end,
+                    file_size
+                )
+                print('complete.')
+                print('-------------------------------------------------')
+        except Exception as e:
+            print('ERROR DELETE UPLOAD SESSION:')
+            print(e)
+            res = requests.delete(self.upload_url).text
+            print(res)
+            exit()
+
+        return 'FILE UPLOAD SUCCESS'
+
+    def upload_piece(self, file, start: int, end: int, size: int):
+        headers = {
+            'Content-Range': 'bytes %s-%s/%s' % (str(start), str(end-1), str(size)),
+        }
+        res = requests.put(self.upload_url, headers=headers, data=file).text
+        res = json.loads(res)
+        if res.get('error'):
+            raise Exception(res['error'])
 
     def create_upload_session(self, local_path: str, remote_path: str):
         file_name = helpers.get_file_name(local_path)
