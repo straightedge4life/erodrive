@@ -32,7 +32,7 @@ def install_0(request):
     if host == 'localhost':
         redirect_url = 'http://localhost:8000/admin/install'
     else:
-        redirect_url = 'https://www.straightedgelifestyles.club/redirect'
+        redirect_url = 'http://redirect.roblog.top'
 
     one = OneDrive()
     url = one.get_app_url(redirect_url)
@@ -87,8 +87,10 @@ def install_2(request, code):
     """
     one = OneDrive()
     one.authorize(code)
+    http_head = request.get_raw_uri().split(':', -1)[0] + '://'
+    host = http_head + request.get_host()
     data = {
-        'host': request.get_host(),
+        'host': host,
         'password': helpers.config('password'),
         'site_name': helpers.config('site_name'),
     }

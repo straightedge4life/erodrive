@@ -1,7 +1,6 @@
 import configparser
 from configparser import NoOptionError, NoSectionError
 from django.conf import settings
-import json
 import hashlib
 import time
 import random
@@ -50,7 +49,7 @@ def config(key: str, value: str = None, section: str = 'APP', file_name: str = '
     # 写入
     if not os.path.exists(config_path):
         os.makedirs(config_path)
-        
+
     parser.set(section, key, value)
     with open(config_file_full_path, 'w') as config_file:
         parser.write(config_file)
