@@ -75,7 +75,7 @@ def install_1(request):
     helpers.batch_store_config(data)
     one = OneDrive()
     http_referrer = request.get_raw_uri().split(':', -1)[0] + '://'
-    curr_url = http_referrer + request.get_host()
+    curr_url = http_referrer + request.get_host() + '/admin/install'
     oauth_url = one.get_authorize_url(curr_url)
     return render(request, 'install/2.html', {'oauth_url': oauth_url})
 
