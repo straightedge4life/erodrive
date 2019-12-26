@@ -5,6 +5,7 @@ import json
 import hashlib
 import time
 import random
+import os
 
 
 def config(key: str, value: str = None, section: str = 'APP', file_name: str = 'base', default = None):
@@ -23,9 +24,10 @@ def config(key: str, value: str = None, section: str = 'APP', file_name: str = '
     if key is '':
         return None
 
-    config_file_path = settings.PROJECT_ROOT + '/config/' + file_name + '.ini'
+    config_path = settings.PROJECT_ROOT + '/config/'
+    config_file_full_path = config_path + file_name + '.ini'
     parser = configparser.RawConfigParser()
-    parser.read(config_file_path)
+    parser.read(config_file_full_path)
 
     if section not in parser.sections():
         if value is None:
@@ -35,7 +37,7 @@ def config(key: str, value: str = None, section: str = 'APP', file_name: str = '
             # raise NoSectionError(section)
             return config(key='foo', value='bar', section=section)
         else:
-            # 创建新Section
+            # 创建新Section+
             parser.add_section(section)
 
     # 如果只有key的话就是获取配置
@@ -46,8 +48,11 @@ def config(key: str, value: str = None, section: str = 'APP', file_name: str = '
             return default
 
     # 写入
+    if not os.path.exists(config_path):
+        os.makedirs(config_path)
+        
     parser.set(section, key, value)
-    with open(config_file_path, 'w') as config_file:
+    with open(config_file_full_path, 'w') as config_file:
         parser.write(config_file)
 
     return None
