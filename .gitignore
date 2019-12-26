@@ -10,6 +10,6 @@ erodrive/erodrive/middlewares/__pycache__/
 erodrive/repositories/__pycache__/
 erodrive/backend/management/commands/__pycache__/
 erodrive/erodrive/config/
-erodrive/erodrive/bin/
+erodrive/bin/
 erodrive/include/
 erodrive/lib/
