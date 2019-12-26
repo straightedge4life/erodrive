@@ -32,7 +32,7 @@ def install_0(request):
     if host == 'localhost':
         redirect_url = 'http://localhost:8000/admin/install'
     else:
-        redirect_url = 'http://redirect.roblog.top'
+        redirect_url = 'https://redirect.seniordriver.top'
 
     one = OneDrive()
     url = one.get_app_url(redirect_url)
