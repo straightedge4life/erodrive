@@ -56,13 +56,13 @@ class OneDrive:
         deep_link = self.deep_link % redirect_url + ru
         return self.app_url + urllib.parse.quote(deep_link)
 
-    def get_authorize_url(self):
+    def get_authorize_url(self, back_url: str):
         """
         Generate authorize url
         :return:
         """
         client_id = helpers.config('client_id')
-        redirect_url = helpers.config('redirect_url')
+        redirect_url = helpers.config('redirect_url') + '?state=' + urllib.parse.quote(back_url)
         path = "/authorize?client_id=%s&scope=%s&response_type=code&redirect_uri=%s"
         return self.oauth_url + path % (client_id, self.scope, redirect_url)
 
