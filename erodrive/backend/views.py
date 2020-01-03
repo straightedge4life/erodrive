@@ -32,7 +32,7 @@ def install_0(request):
     if host == 'localhost':
         redirect_url = 'http://localhost:8000/admin/install'
     else:
-        redirect_url = 'http://redirect.roblog.top'
+        redirect_url = 'https://redirect.seniordriver.top'
 
     one = OneDrive()
     url = one.get_app_url(redirect_url)
@@ -87,8 +87,8 @@ def install_2(request, code):
     """
     one = OneDrive()
     one.authorize(code)
-    http_head = request.get_raw_uri().split(':', -1)[0] + '://'
-    host = http_head + request.get_host()
+    http_referrer = request.get_raw_uri().split(':', -1)[0] + '://'
+    host = http_referrer + request.get_host()
     data = {
         'host': host,
         'password': helpers.config('password'),

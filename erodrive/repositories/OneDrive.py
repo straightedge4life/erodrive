@@ -14,7 +14,7 @@ class OneDrive:
     ru = "https://developer.microsoft.com/en-us/graph/quick-start?appID=_appId_&appName=_appName_&" \
          "redirectUrl=%s&platform=option-php"
 
-    deep_link = "/quickstart/graphIO?publicClientSupport=false&appName=oneindex" \
+    deep_link = "/quickstart/graphIO?publicClientSupport=false&appName=erodrive" \
                 "&redirectUrl=%s&allowImplicitFlow=false&ru="
 
     app_url = "https://apps.dev.microsoft.com/?deepLink="
