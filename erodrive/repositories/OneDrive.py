@@ -52,7 +52,7 @@ class OneDrive:
         :param redirect_url:
         :return: string
         """
-        ru = urllib.parse.quote(self.ru % redirect_url)
+        ru = self.ru % redirect_url
         deep_link = self.deep_link % redirect_url + ru
         return self.app_url + urllib.parse.quote(deep_link)
 
