@@ -86,14 +86,14 @@ DATABASES = {
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
 
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': helpers.config(key='db_name', default='mysql'),
-        'USER': helpers.config(key='db_user', default='root'),
-        'PASSWORD': helpers.config(key='db_password', default=''),
-        'HOST': helpers.config(key='db_host', default='127.0.0.1'),
-        'PORT': helpers.config(key='db_port', default='3306'),
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': helpers.config(key='db_name', default='mysql'),
+    #     'USER': helpers.config(key='db_user', default='root'),
+    #     'PASSWORD': helpers.config(key='db_password', default=''),
+    #     'HOST': helpers.config(key='db_host', default='127.0.0.1'),
+    #     'PORT': helpers.config(key='db_port', default='3306'),
+    # }
 
 }
 
