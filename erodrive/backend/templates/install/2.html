@@ -15,13 +15,27 @@
         </nav>
 
         <div class="panel panel-default">
-            <div class="panel-heading">Please copy client id and client secret into text box from <b>One Drive</b>
-                application page.
-            </div>
-            <div class="panel-body">
-                <button class="btn btn-block" onclick="window.location.href='{{ oauth_url }}'">Go bind</button>
+            <div class="panel-heading">To complete finally step,please go to <b>One Drive</b>
+                to accept access permission for this application. <br>
+                Then will redirect to a transfer website, copy the <b>code</b> in transfer website into this text box.
             </div>
         </div>
+
+        <div class="panel-body">
+                <form method="get" action="/admin/install" id="step_one_form">
+                    <div class="form-group col-lg-5">
+                        <input type="text" class="form-control" name="code" id="code" placeholder="Copy the code from transfer website" required>
+                        <div class="h4"></div>
+                        <a class="btn btn-default btn-info" href="{{ oauth_url }}" target="_blank">Go to One Drive</a>
+                        <button class="btn btn-default btn-primary">Complete</button>
+                    </div>
+
+                </form>
+            </div>
+
+
+
+    </div>
 
 
     </div>

@@ -1,0 +1,32 @@
+{% extends 'layout/default.html' %}
+
+{% block title %}INSTALL{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <!-- Static navbar -->
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="javascript:void(0);">INSTALLATION : STEP 1</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">To complete finally step,please go to <b>One Drive</b>
+                then accept access permission for this application.
+            </div>
+            <div class="panel-body">
+                <button class="btn btn-block" onclick="window.location.href='{{ oauth_url }}'">Go to One Drive</button>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
