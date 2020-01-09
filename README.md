@@ -58,10 +58,11 @@ Nginx配置:
 local_file替换为你本地的文件的路径，如 /usr/file/hello_world.php  
 remote_path替换为你想上传到One Drive的目录 如 /upload
 #### 上传目录
-待完成.....
-
+`python manage.py Upload folder local_folder remote_path`  
+local_folder替换为你本地的文件的路径，如 /usr/file  
+remote_path替换为你想上传到One Drive的目录 如 /upload
 ## TODO LIST 
-*  上传目录命令
+*  上传目录命令使用asyncio
 *  使用缓存（Redis）
 *  优化后台  
 ......

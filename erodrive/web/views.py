@@ -38,7 +38,7 @@ def detail(request):
     if not file_name:
         return HttpResponseRedirect('/')
     one = OneDrive()
-    
+
     file = one.get_file(path=file_path, name=file_name)
     if not file:
         return HttpResponseRedirect('/')

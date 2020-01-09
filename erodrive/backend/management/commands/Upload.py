@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from repositories.OneDrive import OneDrive
+import os
 
 
 class Command(BaseCommand):
@@ -16,7 +17,7 @@ class Command(BaseCommand):
         if mode == 'file':
             self.upload_file(local_path, remote_path)
         elif mode == 'folder':
-            print('Upload folder.')
+            self.upload_folder(local_path, remote_path)
         else:
             print("ERROR:Argument [path] must be 'file' or 'folder'.")
             return None
@@ -25,3 +26,24 @@ class Command(BaseCommand):
         one = OneDrive()
         res = one.upload(local_path, remote_path)
         print(res)
+
+    def upload_folder(self, local_path: str, remote_path: str):
+        if os.path.isfile(local_path):
+            print('Please use upload file command.')
+            exit()
+        dir_list = os.listdir(local_path)
+        folder_name = local_path.split('/').pop()
+
+        for dir_item in dir_list:
+            full_path = local_path + '/' + dir_item
+            upload_path = remote_path + '/' + folder_name
+
+            if os.path.isfile(full_path):
+                self.upload_file(full_path, upload_path)
+            else:
+                self.upload_folder(full_path, upload_path)
+
+
+
+
+
