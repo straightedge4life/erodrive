@@ -79,7 +79,7 @@ def install_1(request):
     if curr_host == 'localhost':
         http_referrer = request.get_raw_uri().split(':', -1)[0] + '://'
         curr_url = http_referrer + request.get_host() + '/admin/install'
-    oauth_url = one.get_authorize_url(curr_url)
+    oauth_url = one.get_authorize_url()
 
     if curr_host == 'localhost':
         return render(request, 'install/2-local.html', {'oauth_url': oauth_url})

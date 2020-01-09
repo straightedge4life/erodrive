@@ -31,14 +31,18 @@ def detail(request):
     :param request:
     :return:
     """
-    file_path = request.GET.get('file_path')
+    file_path = request.GET.get('file_path', '/')
     file_name = request.GET.get('file_name')
     suffix = file_name.split('.').pop()
     suffix_cat = None
-    if not file_path or not file_name:
+    if not file_name:
         return HttpResponseRedirect('/')
     one = OneDrive()
+    
     file = one.get_file(path=file_path, name=file_name)
+    if not file:
+        return HttpResponseRedirect('/')
+
     show_configure = eval(helpers.config('show'))
     for conf in show_configure:
         if suffix in conf['suffix']:
