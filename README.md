@@ -50,3 +50,18 @@ Nginx配置:
 
 ![img](install-4.png)  
 安装成功会显示这个页面。
+
+## 命令
+除了上面提到的RefreshToken之外，还有上传。方便你将服务器内的文件上传到网盘。  
+#### 上传文件
+`python manage.py Upload file local_file remote_path`  
+local_file替换为你本地的文件的路径，如 /usr/file/hello_world.php  
+remote_path替换为你想上传到One Drive的目录 如 /upload
+#### 上传目录
+待完成.....
+
+##TODO LIST 
+*  上传目录命令
+*  使用缓存（Redis）
+*  优化后台  
+......
