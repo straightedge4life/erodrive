@@ -176,8 +176,9 @@ class OneDrive:
         return self.upload_small_file(local_path, remote_path)
 
     def upload_small_file(self, local_path: str, remote_path: str):
-        print('----------------START TO UPLOAD-------------------------')
         file_name = helpers.get_file_name(local_path)
+        print('----------------START TO UPLOAD FILE [ %s ]-------------------------' % file_name)
+
         remote_path = self.prepare_remote_path(remote_path, file_name)
         access_token = helpers.config('access_token')
 
@@ -203,10 +204,11 @@ class OneDrive:
             raise Exception(resp.get('error'))
 
         # return resp
-        return 'FILE UPLOAD SUCCESS'
+        return 'FILE [ %s ] UPLOADED.' % file_name
 
     def upload_large_file(self, local_path: str, remote_path: str, file_size: int):
         try:
+            file_name = helpers.get_file_name(local_path)
             upload_session = self.create_upload_session(local_path, remote_path)
             self.upload_url = upload_session.get('uploadUrl')
             # upload_expire = upload_session.get('expirationDateTime')
@@ -217,13 +219,15 @@ class OneDrive:
             composite_num = file_size - remainder
             times = int(composite_num / self.chunk_piece_size)
 
-            print('File size:%s,file size more than %s kb,ready to multiple upload.' % (
+            print('----------------START TO UPLOAD [ %s ]-------------------------' % file_name)
+
+            print('File size %s kb more than %s kb,ready to multiple upload.' % (
                 str(file_size),
                 str(self.chunk_piece_size))
             )
 
             print('It will divided to %s time to upload.' % str(times + 1))
-            print('----------------START TO UPLOAD-------------------------')
+
             with open(local_path, 'rb') as f:
                 for t in range(0, times):
                     print('%s kb - %s of %s' % (
@@ -243,8 +247,10 @@ class OneDrive:
                         file_size
                     )
                     print('complete.')
-                    print('-------------------------------------------------')
+                    print('//////////////////////////////////////')
 
+                if 't' not in dir():
+                    t = 0
                 print('%s kb - %s of %s' % (
                     str(int(remainder / 1024)),
                     str(t + 1),
@@ -262,7 +268,7 @@ class OneDrive:
                     file_size
                 )
                 print('complete.')
-                print('-------------------------------------------------')
+                print('//////////////////////////////////////')
         except Exception as e:
             print('ERROR DELETE UPLOAD SESSION:')
             print(e)
@@ -270,7 +276,7 @@ class OneDrive:
             print(res)
             exit()
 
-        return 'FILE UPLOAD SUCCESS'
+        return 'FILE [ %s ] UPLOADED.' % file_name
 
     def upload_piece(self, file, start: int, end: int, size: int):
         headers = {
