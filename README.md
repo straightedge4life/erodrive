@@ -1,10 +1,10 @@
 # ERO DRIVE
-一个用Django写的One Drive网盘，参考项目[ONEINDEX](https://github.com/donwa/oneindex)  
+一个用Django写的One Drive网盘，参考项目[oneindex](https://github.com/donwa/oneindex)  
 
    
  ## 前言
- 这个项目一开始是因为我之前接触过ONEINDEX，然后刚好也在学Python，在想要不试下自己拿Python模仿ONEINDEX写一个项目练练手。  
- 在基础功能都写好后发现其实已经有一个[PYONE](https://github.com/abbeyokgo/PyOne)的项目，而且功能还挺多的。  
+ 这个项目一开始是因为我之前接触过oneindex，然后刚好也在学Python，在想要不试下自己拿Python模仿oneindex写一个项目练练手。  
+ 在基础功能都写好后发现其实已经有一个[PyOne](https://github.com/abbeyokgo/PyOne)的项目，而且功能还挺多的。  
  不过我也只是拿来练手无所谓。  
    
 在写这个项目的过程中其实也学到了不少Python知识，我会把部分问题总结好并更新到我的博客 [Rob's blog](https://roblog.top)
@@ -66,5 +66,4 @@ remote_path替换为你想上传到One Drive的目录 如 /upload
 *  ~~上传目录命令使用asyncio~~ (已完成)
 *  上传目录命令使用asybcio + aiohttp
 *  使用Redis缓存
-*  优化后台  
-......
+*  后台增加上传端口、session过期时间、缓存过期时间等等....
