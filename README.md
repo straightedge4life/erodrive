@@ -64,6 +64,6 @@ remote_path替换为你想上传到One Drive的目录 如 /upload
 ## TODO LIST 
 *  ~~使用上传命令时优化信息提示~~ (已完成)
 *  ~~上传目录命令使用asyncio~~ (已完成)
-*  上传目录命令使用asybcio + aiohttp
+*  上传目录命令使用asyncio + aiohttp
 *  使用Redis缓存
 *  后台增加上传端口、session过期时间、缓存过期时间等等....
