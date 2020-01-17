@@ -1,0 +1,17 @@
+.save-setting-list{
+    width:80px;
+    margin: 0 auto;
+}
+
+.save-setting-list button{
+    width:80px;
+    text-align: center;
+}
+[hidden] {
+  display: none !important;
+}
+
+.progress-err{
+    background-color: red;
+    opacity: 0.6;
+}

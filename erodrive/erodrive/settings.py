@@ -142,5 +142,5 @@ STATICFILES_DIRS = [
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-SESSION_COOKIE_AGE = 60*5
-# 3600*48
+SESSION_COOKIE_AGE = 3600 * 48
+# seconds

@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
 from erodrive import helpers
 from repositories.OneDrive import OneDrive
+from django.http import HttpResponseRedirect
 
 
 def install(request):
@@ -13,6 +14,9 @@ def install(request):
     # be careful data-type is string from request query string
     step = request.GET.get('step', '0')
     code = request.GET.get('code', None)
+
+    if helpers.config(key='is_install', default=None):
+        return HttpResponseRedirect('/')
 
     if code:
         return install_2(request, code)
@@ -118,6 +122,7 @@ def index(request):
         'site_name': helpers.config('site_name'),
         'password': helpers.config('password'),
         'access_code': helpers.config('access_code'),
+        'access_token': helpers.config('access_token'),
     }
     return render(request, 'adm/index.html', configure)
 
@@ -144,3 +149,15 @@ def login(request):
         'site_name': helpers.config('site_name')
     }
     return render(request, 'adm/login.html', data)
+
+
+def upload(request):
+    upload_file = request.FILES['file']
+
+    with open('C:/Users/Rob/Desktop/write_file_test/1.rar', 'wb+') as f:
+        # for chunk in upload_file.chunks():
+        #     f.write(chunk)
+        f.write(upload_file)
+    return JsonResponse({
+        'file': '1231231'
+    })

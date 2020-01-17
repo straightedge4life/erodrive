@@ -1,4 +1,9 @@
 {% extends 'layout/default.html' %}
+{% load static %}
+
+{% block styles %}
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block title %}ADMIN{% endblock %}
 {% block site_name %}{{ site_name }}{% endblock %}
@@ -22,16 +27,32 @@
 
                 <div class="form-group">
                     <label for="name">Home Page access code</label>
-                    <input type="text" class="form-control" id="access_code" placeholder="access code" value="{{  access_code }}" name="access_code">
+                    <input type="text" class="form-control" id="access_code" placeholder="access code"
+                           value="{{ access_code }}" name="access_code">
                 </div>
 
                 <div class="form-group">
                     <label for="name">Admin Page password</label>
-                    <input type="text" class="form-control" id="password" placeholder="admin password" value="{{  password }}" name="password">
+                    <input type="text" class="form-control" id="password" placeholder="admin password"
+                           value="{{ password }}" name="password">
                 </div>
 
-                <button type="submit" class="btn btn-default">Submit</button>
+                <div class="save-setting-list">
+                    <button type="submit" class="btn btn-info" >SAVE</button>
+                </div>
             </form>
+        </div>
+        <div class="jumbotron">
+            <label class="btn btn-default" style="width: 300px;">
+                <i class="glyphicon glyphicon-upload"></i>
+                <span class="upload-filename-text">Please Choose File</span>
+                <input type="file" hidden name="file" id="file">
+            </label>
+            <button class="btn btn-info" onclick="start_upload()">UPLOAD</button>
+            <br>
+            <div style="width: 300px;">
+                <span class="progress-bar" style="">0%</span>
+            </div>
         </div>
 
 
@@ -40,5 +61,91 @@
 {% endblock %}
 
 {% block script %}
+    <script>
+        let access_token = '{{ access_token }}';
+        let upload_session = '';
+        let large_file_size = 4 * 1024 * 1024; //4MB以上开始大文件上传
 
+        /**
+         * Change upload button text.
+         **/
+        $('#file').on('change', function(target){
+            let curr_file = target.currentTarget.files[0];
+             let file_name = curr_file.name;
+            if(file_name.length >= 30){
+                file_name = curr_file.name.slice(0,30) + '....';
+            }
+            $('.upload-filename-text').html(file_name)
+
+        })
+
+        /** Start upload
+         * @returns {boolean}
+         */
+        function start_upload() {
+            let file = $('#file')[0].files[0];
+            if(typeof file == 'undefined'){
+                return false;
+            }
+
+            if (file.size >= large_file_size){
+                console.log('START LARGE FIL UPLOAD.')
+                large_file_upload(file, '/test')
+            }else{
+                small_file_upload(
+                    file,
+                    '/test',
+                    function(ret){
+                        progress_bar_fill(100);
+                    },
+                    function(ret){
+                        if(ret.error){
+                            progress_bar_fill(100, ret.error.message);
+                        }else{
+                            progress_bar_fill(100,'PLEASE REFRESH PAGE.');
+                        }
+                    }
+                );
+            }
+        }
+
+
+
+        function file_chunk(file) {
+            let loaded = 0;
+            let start = 0;
+            let total = file.size;
+            let step = 1024 * 1024;
+            let reader = new FileReader();
+            let headers = {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+            let blob = file.slice(start,1024);
+
+            reader.onload = function (e) {
+                let data = new FormData();
+                $.ajax({
+                    url: '/admin/upload',
+                    file:data,
+                    headers:headers,
+                    type:'POST',
+                    //processData:false,
+                    //contentType:false
+                }).done(function(){
+                    loaded += step;
+                    if(loaded <= total){
+                        blob = file.slice(loaded, loaded + step);
+                        reader.readAsBinaryString(blob);
+                    }else{
+                        loaded = total;
+                    }
+                });
+            }
+
+            reader.readAsBinaryString(blob);
+
+        }
+    </script>
+
+    <script language="JavaScript" src="{% static 'js/upload.js' %}"></script>
 {% endblock %}

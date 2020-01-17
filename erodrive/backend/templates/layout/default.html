@@ -2,6 +2,7 @@
 <html lang="zh-CN">
     <header>
         {% include 'layout/header.html' %}
+        {% block styles %} {% endblock %}
         <title>{% block title %}{% endblock %} - {% block site_name %}{% endblock %}</title>
     </header>
     <body>
