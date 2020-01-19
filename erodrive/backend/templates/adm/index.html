@@ -43,15 +43,27 @@
             </form>
         </div>
         <div class="jumbotron">
+
+            <div class="form-group remote-path-group">
+                <label for="remote_path">Remote path</label>
+                <input type="text" class="form-control " id="remote_path" value="/">
+            </div>
+
             <label class="btn btn-default" style="width: 300px;">
                 <i class="glyphicon glyphicon-upload"></i>
                 <span class="upload-filename-text">Please Choose File</span>
                 <input type="file" hidden name="file" id="file">
             </label>
             <button class="btn btn-info" onclick="start_upload()">UPLOAD</button>
+
             <br>
             <div style="width: 300px;">
                 <span class="progress-bar" style="">0%</span>
+            </div>
+            <br>
+
+             <div class="form-group">
+                <span class="upload-err-text"></span>
             </div>
         </div>
 
@@ -83,68 +95,63 @@
          * @returns {boolean}
          */
         function start_upload() {
+            // Clear error message and
+            show_err();
+            let remote_path = path_check();
+            if(!remote_path){
+                show_err('Please confirm your Remote path format')
+                return false;
+            }
             let file = $('#file')[0].files[0];
             if(typeof file == 'undefined'){
+                show_err('Please select file.')
                 return false;
             }
 
             if (file.size >= large_file_size){
                 console.log('START LARGE FIL UPLOAD.')
-                large_file_upload(file, '/test')
+                large_file_upload(file, remote_path)
             }else{
                 small_file_upload(
                     file,
-                    '/test',
+                    remote_path,
                     function(ret){
                         progress_bar_fill(100);
                     },
                     function(ret){
-                        if(ret.error){
-                            progress_bar_fill(100, ret.error.message);
-                        }else{
-                            progress_bar_fill(100,'PLEASE REFRESH PAGE.');
-                        }
+                        progress_bar_fill(100,'FAIL');
+                        show_err(ret.error.message);
                     }
                 );
             }
         }
 
 
+        /**
+         * Check remote path format and return then.
+         **/
+        function path_check(){
+            $('.remote-path-group').removeClass('has-error')
+            let remote_path = $('#remote_path').val();
 
-        function file_chunk(file) {
-            let loaded = 0;
-            let start = 0;
-            let total = file.size;
-            let step = 1024 * 1024;
-            let reader = new FileReader();
-            let headers = {
-                'X-CSRFToken': getCookie('csrftoken')
+            let patten = /^\/\w+(\/\w+)*$/;
+            let reg = new RegExp(patten);
+            if(!reg.test(remote_path) && remote_path!= '/'){
+                $('.remote-path-group').addClass('has-error')
+                return false
             }
-            let blob = file.slice(start,1024);
-
-            reader.onload = function (e) {
-                let data = new FormData();
-                $.ajax({
-                    url: '/admin/upload',
-                    file:data,
-                    headers:headers,
-                    type:'POST',
-                    //processData:false,
-                    //contentType:false
-                }).done(function(){
-                    loaded += step;
-                    if(loaded <= total){
-                        blob = file.slice(loaded, loaded + step);
-                        reader.readAsBinaryString(blob);
-                    }else{
-                        loaded = total;
-                    }
-                });
-            }
-
-            reader.readAsBinaryString(blob);
-
+            return remote_path;
         }
+
+        /**
+         * Show error message below upload button
+         * @param msg
+         */
+        function show_err(msg = ''){
+            $('.upload-err-text').html(msg)
+        }
+
+
     </script>
 
     <script language="JavaScript" src="{% static 'js/upload.js' %}"></script>

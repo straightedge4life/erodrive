@@ -15,3 +15,9 @@
     background-color: red;
     opacity: 0.6;
 }
+
+.upload-err-text{
+    color: #a94442;
+    font-weight: bold;
+    font-family: Arial;
+}

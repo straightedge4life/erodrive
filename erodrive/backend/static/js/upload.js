@@ -72,8 +72,8 @@ function getUploadSession(access_token, remote_path, file_name){
  * @param successFunc
  */
 function small_file_upload(file, remote_path, successFunc, failFunc){
-    remote_path = prepare_remote_path(remote_path, file.name)
-    let url = api_url + '/drive/root' + remote_path + 'content'
+    remote_path = prepare_remote_path(remote_path, file.name);
+    let url = api_url + '/drive/root' + remote_path + 'content';
     $.ajax({
             async: false,
             url: url,
@@ -84,11 +84,12 @@ function small_file_upload(file, remote_path, successFunc, failFunc){
                 'Authorization': 'bearer ' + access_token,
                 'Content-Type': 'application/json'
             },
-            success: function (ret) {
-                successFunc(ret);
-            },
             complete:function(ret){
-                failFunc(ret.responseJSON);
+                if(typeof ret.responseJSON.error == 'undefined'){
+                    successFunc(ret.responseJSON);
+                }else{
+                    failFunc(ret.responseJSON);
+                }
             }
         });
 }
