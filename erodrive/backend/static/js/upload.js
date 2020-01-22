@@ -29,11 +29,12 @@ function getCookie(name) {
  * @returns {string}
  */
 function prepare_remote_path(remote_path, file_name){
-    if (remote_path !== '/') {
-         return encodeURIComponent(':' + remote_path + '/' + file_name + ':/');
-    } else {
-        return '/';
+    if(remote_path == '/'){
+        remote_path = '';
     }
+    remote_path = encodeURIComponent(':' + remote_path + '/' + file_name + ':/');
+
+    return remote_path;
 }
 
 /**
@@ -74,7 +75,7 @@ function getUploadSession(access_token, remote_path, file_name){
  */
 function small_file_upload(file, remote_path, successFunc, failFunc){
     remote_path = prepare_remote_path(remote_path, file.name);
-    let url = api_url + '/drive/root' + remote_path + 'content';
+    let url = api_url + '/me/drive/root' + remote_path + 'content';
     $.ajax({
             async: false,
             url: url,
