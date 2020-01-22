@@ -155,7 +155,7 @@ function piece_upload(url, file, start, end, file_size){
     console.log('HEADERS:');
     console.log(headers);
     $.ajax({
-        async:false,
+        // async:false,
         url:url,
         headers:headers,
         data:file,
