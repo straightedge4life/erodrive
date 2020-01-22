@@ -47,7 +47,7 @@ function prepare_remote_path(remote_path, file_name){
 function getUploadSession(access_token, remote_path, file_name){
     remote_path = prepare_remote_path(remote_path,file_name);
 
-    let url = api_url + '/drive/root' + remote_path + 'createUploadSession';
+    let url = api_url + '/me/drive/root' + remote_path + 'createUploadSession';
     console.log(url);
     let upload_session = '';
     $.ajax({
