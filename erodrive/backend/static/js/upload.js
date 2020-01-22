@@ -32,7 +32,7 @@ function prepare_remote_path(remote_path, file_name){
     if (remote_path !== '/') {
          return encodeURIComponent(':' + remote_path + '/' + file_name + ':/');
     } else {
-        return '';
+        return '/';
     }
 }
 
@@ -46,7 +46,8 @@ function prepare_remote_path(remote_path, file_name){
 function getUploadSession(access_token, remote_path, file_name){
     remote_path = prepare_remote_path(remote_path,file_name);
 
-    let url = api_url + '/drive/root' + remote_path + 'createUploadSession'
+    let url = api_url + '/drive/root' + remote_path + 'createUploadSession';
+    console.log(url);
     let upload_session = '';
     $.ajax({
         async:false,
@@ -126,6 +127,9 @@ function large_file_upload(file, remote_path){
     }
 
     // latest pieces
+    if(!large_file_upload_switch){
+        return false;
+    }
     console.log('正在上传最后一次... ');
     let start = pointer;
     console.log('字节范围:' + start + ' - ' + file_size);
@@ -162,9 +166,9 @@ function piece_upload(url, file, start, end, file_size){
         method:'PUT',
         processData:false,
         complete:function(ret){
-
+            console.log(ret);
             if(ret.responseJSON.error){
-                console.log(ret.responseJSON.error);
+                 console.log(ret);
                 large_file_upload_switch = false;
             }else{
                 console.log(ret);
