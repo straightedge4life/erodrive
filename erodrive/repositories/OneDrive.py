@@ -301,7 +301,7 @@ class OneDrive:
         }
 
         query = 'createUploadSession'
-        url = self.api_url + '/drive/root' + remote_path + query
+        url = self.api_url + '/me/drive/root' + remote_path + query
         # No param required in this api.
         upload_session = requests.post(url=url, headers=headers).text
 
