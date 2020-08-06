@@ -67,6 +67,13 @@ class OneDrive:
         path = "/authorize?client_id=%s&scope=%s&response_type=code&redirect_uri=%s"
         return self.oauth_url + path % (client_id, self.scope, redirect_url)
 
+    @staticmethod
+    def get_access_token():
+        access_token = helpers.config('access_token')
+        if not access_token:
+            raise Exception('Access token does not exists.Please refresh token.')
+        return access_token
+
     def authorize(self, code):
         """
         require token from Microsoft api by code
@@ -105,23 +112,40 @@ class OneDrive:
             path = '/'
         elif path != '/':
             path = urllib.parse.quote(':/' + path + ':/')
+            # path = ':/' + path + ':/'
 
         query = 'children?select=name,size,folder,@microsoft.graph.downloadUrl,lastModifiedDateTime'
         url = self.api_url + '/me/drive/root' + path + query
-        access_token = helpers.config('access_token')
-        if not access_token:
-            raise Exception('Access token does not exists.Please refresh token.')
+
         headers = {
-            'Authorization': 'bearer ' + access_token,
+            'Authorization': 'bearer ' + self.get_access_token(),
             'Content-Type': 'application/json'
         }
         resp = requests.get(url, headers=headers).text
 
         resp = json.loads(resp)
-
         if resp.get('error'):
             raise Exception(resp.get('error'))
+        return resp
 
+    def get_item(self, file_path: str):
+        """
+        获取文件信息
+        :param file_path:
+        :return:
+        """
+        query = '?select=name,size,@microsoft.graph.downloadUrl,lastModifiedDateTime'
+        url = self.api_url + '/me/drive/root:/' + file_path + query
+
+        headers = {
+            'Authorization': 'bearer ' + self.get_access_token(),
+            'Content-Type': 'application/json'
+        }
+        resp = requests.get(url, headers=headers).text
+
+        resp = json.loads(resp)
+        if resp.get('error'):
+            raise Exception(resp.get('error'))
         return resp
 
     def get_token(self):
@@ -152,21 +176,6 @@ class OneDrive:
         helpers.batch_store_config(resp)
 
         return None
-
-    def get_file(self, path: str, name: str):
-        """
-        Find file in list
-        :param path:
-        :param name:
-        :return:
-        """
-        file_list = self.get_list(path)['value']
-        for f in file_list:
-            if f['name'] == name:
-                f.update({'downloadUrl': f.get('@microsoft.graph.downloadUrl')})
-                del f['@microsoft.graph.downloadUrl']
-                return f
-        return []
 
     def upload(self, local_path: str, remote_path: str):
         # return bytes

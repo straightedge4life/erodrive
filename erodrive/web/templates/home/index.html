@@ -35,7 +35,7 @@
                 <small>
                     {% for p in path_list %}
                         {% if p %}
-                           <a href="/?path={{ p.path }}">{{ p.name }}</a>  >
+                           <a href="/?path={{ p.decode_path }}">{{ p.name }}</a>  >
                         {% endif %}
                     {% endfor %}
                     </a>
@@ -48,12 +48,12 @@
               <li class="list-group-item">
               {% if item.type == 'file' %}
                   {% if item.show %}
-                      <a href="/detail?file_path={{ curr_path }}&file_name={{ item.name }}" target="_blank">{{ item.name }}</a>
+                      <a href="/detail?file_path={{ curr_path }}&file_name={{ item.decode_name }}" target="_blank">{{ item.name }}</a>
                   {% else %}
                       <a href="{{ item.downloadUrl }}" target="_blank">{{ item.name }}</a>
                   {% endif %}
               {% else %}
-                  <a href="?path={{ curr_path }}/{{ item.name }}">
+                  <a href="?path={{ curr_path }}/{{ item.decode_name }}">
                       {{ item.name }}
                   </a>
               {% endif %}

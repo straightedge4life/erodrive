@@ -5,6 +5,7 @@ import hashlib
 import time
 import random
 import os
+import urllib
 
 
 def config(key: str, value: str = None, section: str = 'APP', file_name: str = 'base', default = None):
@@ -84,8 +85,8 @@ def list_format(data: list):
     for val in show_suffix_configure:
         for t in val['suffix']:
             show_suffix_list.append(t)
-
     for val in data:
+        val.update({'decode_name': urllib.parse.quote(val.get('name'))})
         if val.get('@microsoft.graph.downloadUrl'):
             val.update({'downloadUrl': val.get('@microsoft.graph.downloadUrl')})
 
@@ -119,6 +120,7 @@ def path_format(path):
 
         path_list.append({
             'name': name,
+            'decode_path': urllib.parse.quote(path_chain),
             'path': path_chain
         })
     return path_list

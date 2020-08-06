@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from erodrive import helpers
 from repositories.OneDrive import OneDrive
 import requests
+import urllib
 
 
 def index(request):
@@ -17,7 +18,7 @@ def index(request):
 
     data = {
         'item_list': item_list,
-        'curr_path': '' if path == '/' else path,
+        'curr_path': '' if path == '/' else urllib.parse.quote(path),
         'path_list': helpers.path_format(path),
         'site_name': helpers.config('site_name'),
     }
@@ -38,8 +39,8 @@ def detail(request):
     if not file_name:
         return HttpResponseRedirect('/')
     one = OneDrive()
-
-    file = one.get_file(path=file_path, name=file_name)
+    file = one.get_item(file_path + '/' + file_name)
+    file.update({'downloadUrl': file.get('@microsoft.graph.downloadUrl')})
     if not file:
         return HttpResponseRedirect('/')
 
