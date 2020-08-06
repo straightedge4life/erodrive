@@ -123,7 +123,7 @@ function large_file_upload(file, remote_path){
         console.log('字节范围:' + start + ' - ' + pointer);
         piece_upload(upload_url, file.slice(start, pointer), start, pointer, file_size);
         console.log('----------------------------------');
-        progress_bar_fill(math.format(math.chain(math.bignumber(i)).divide(math.bignumber(step_num)).done()) * 100 - 1);
+        progress_bar_fill(math.round(math.format(math.chain(math.bignumber(i)).divide(math.bignumber(step_num)).done()) * 100 - 1,2));
 
     }
 
