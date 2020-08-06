@@ -27,7 +27,7 @@ Nginx配置:
 ```
 
 运行项目:  
-确保在erodrive/erodrive目录  
+在erodrive/erodrive目录  
 `python manage.py runserver 0.0.0.0::8000`  
 端口自己修改，可以后面带上nohup等命令，这里我推荐[supervisor](http://www.supervisord.org/)
   
@@ -54,11 +54,11 @@ Nginx配置:
 ## 命令
 除了上面提到的RefreshToken之外，还有上传。方便你将服务器内的文件上传到网盘。  
 #### 上传文件
-`python manage.py Upload file local_file remote_path`  
+`python manage.py Upload file [local_file] [remote_path]`  
 local_file替换为你本地的文件的路径，如 /usr/file/hello_world.php  
 remote_path替换为你想上传到One Drive的目录 如 /upload
 #### 上传目录
-`python manage.py Upload folder local_folder remote_path`  
+`python manage.py Upload folder [local_folder] [remote_path]`  
 local_folder替换为你本地的文件的路径，如 /usr/file  
 remote_path替换为你想上传到One Drive的目录 如 /upload
 ## TODO LIST 
