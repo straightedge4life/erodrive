@@ -1,9 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,JsonResponse
 from erodrive import helpers
 from repositories.OneDrive import OneDrive
 import requests
 import urllib
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
 
 
 def index(request):
@@ -87,3 +90,35 @@ def login(request):
     }
 
     return render(request, 'home/login.html', data)
+
+
+def mail(request):
+    query = request.GET
+    pwd = query.get('pwd')
+    token = query.get('token')
+    content = query.get('content')
+    sender = query.get('sender')
+    title = query.get('title')
+    receivers = [query.get('receiver')]
+
+    if token != 'c7b04db0dd119f34819102dc8de4f32c':
+        return JsonResponse({"message": "You know what time it is."})
+
+    mail_host = 'smtp.qq.com'
+    mail_port = 25
+    mail_user = sender
+    mail_pass = pwd
+    message = MIMEText(content, 'plain', 'utf-8')
+    message['Subject'] = Header(title, 'utf-8')
+    message['From'] = Header(sender, 'utf-8')
+    message['To'] = Header(receivers[0], 'utf-8')
+    try:
+        smtpObj = smtplib.SMTP()
+        smtpObj.connect(mail_host, mail_port)
+        smtpObj.login(mail_user, mail_pass)
+        smtpObj.sendmail(
+            sender, receivers, message.as_string())
+        smtpObj.quit()
+        return JsonResponse({"message": "SUCCESS"})
+    except smtplib.SMTPException as e:
+        return JsonResponse({"message": "ERROR:" + e})
